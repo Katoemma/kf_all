@@ -4,8 +4,8 @@ import 'package:kijani_branch/app/data/providers/greetings.dart';
 import 'package:kijani_branch/app/modules/auth/controllers/auth_controller.dart';
 import 'package:kijani_branch/global/enums/colors.dart';
 
-class PmcDashboard extends StatelessWidget {
-  const PmcDashboard({super.key});
+class Dashboard extends StatelessWidget {
+  const Dashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +109,7 @@ class PmcDashboard extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final parish = authController.parishData[index];
                       return GestureDetector(
-                        onTap: () => Get.toNamed('/parish/${parish.id}'),
+                        onTap: () => Get.toNamed('/parish', arguments: parish),
                         child: Container(
                           color: kfBlue,
                           padding: const EdgeInsets.all(16),

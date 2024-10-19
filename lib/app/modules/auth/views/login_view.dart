@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kijani_branch/app/modules/auth/controllers/auth_controller.dart';
 import 'package:kijani_branch/global/enums/colors.dart';
+import 'package:kijani_branch/global/services/network_services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoginView extends StatefulWidget {
@@ -186,9 +187,20 @@ class _LoginViewState extends State<LoginView> {
                                   : () async {
                                       isButtonLoading.value =
                                           true; // Show loading
-                                      await authController.login(
-                                          usernameController.text,
-                                          passwordController.text);
+                                      if (await NetworkServices()
+                                          .checkAirtableConnection()) {
+                                        await authController.login(
+                                            usernameController.text,
+                                            passwordController.text);
+                                      } else {
+                                        Get.snackbar(
+                                          'No internet connection',
+                                          'Please check your internet connection and try again',
+                                          colorText: Colors.white,
+                                          backgroundColor: Colors.red,
+                                        );
+                                      }
+
                                       isButtonLoading.value =
                                           false; // Hide loading
                                     },

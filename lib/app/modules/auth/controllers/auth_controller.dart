@@ -3,7 +3,7 @@ import 'package:airtable_crud/airtable_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kijani_branch/app/data/models/parish_model.dart';
-import 'package:kijani_branch/app/data/providers/userdata_provider.dart';
+import 'package:kijani_branch/app/data/providers/parish_provider.dart';
 import 'package:kijani_branch/app/routes/routes.dart';
 import 'package:kijani_branch/global/services/airtable_service.dart';
 import 'package:kijani_branch/global/services/storage_service.dart';
@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   final LocalStorage storageService = LocalStorage();
-  final UserDataProvider userDataProvider = UserDataProvider();
+  final ParishProvider parishProvider = ParishProvider();
 
   var isAuthenticated = false.obs;
   var userRole = ''.obs;
@@ -20,18 +20,23 @@ class AuthController extends GetxController {
   var isLoading = false.obs;
 
   Future<void> login(String email, String password) async {
+    print('LOGIN METHHOD HAS BEEN CALLED');
+
     try {
       var bcFilter = 'AND({BC-Email}="$email", {Branch-code}="$password")';
       var melFilter = 'AND({MEL-Email}="$email", {Branch-code}="$password")';
       var pmcFilter = 'AND({PMC Email}="$email", {Branch-code}="$password")';
 
       // Attempt login for each role
+      print('Attempting BC login');
       var bc = await _attemptLogin(bcFilter, 'bc');
       if (bc != null) return;
 
+      print('Attempting MEL login');
       var mel = await _attemptLogin(melFilter, 'mel');
       if (mel != null) return;
 
+      print('Attempting PMC login');
       var pmc = await _attemptLogin(pmcFilter, 'pmc');
       if (pmc != null) return;
 
@@ -66,8 +71,10 @@ class AuthController extends GetxController {
 
   // Helper function to attempt login and handle the result
   Future<bool?> _attemptLogin(String filter, String role) async {
+    print('Attempting login with filter: $filter');
     var response = await nurseryBase.fetchRecordsWithFilter('parishes', filter,
         view: 'To BC App');
+    print('Response: $response');
     if (response.isNotEmpty) {
       isLoading.value = true; // Start loading when a match is found
       List<Parish> parishes =
@@ -101,7 +108,7 @@ class AuthController extends GetxController {
     }
 
     // Fetch hierarchical data and save parishes to shared preferences
-    await userDataProvider.fetchParishes(parishes);
+    await parishProvider.fetchParishes(parishes);
     await _saveParishesToSharedPreferences(parishes);
 
     Get.offAllNamed(_getRedirectRoute());
