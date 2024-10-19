@@ -21,16 +21,34 @@ class Parish {
     required this.status,
   });
 
-  factory Parish.fromAirtable(Map<String, dynamic> json) {
+  factory Parish.fromJson(Map<String, dynamic> json) {
     return Parish(
-      id: json['ID'],
-      parishId: json['Parish'],
-      name: json['Parish Name'],
-      groups: [],
-      pcID: json['PC'],
-      pcName: json['PC-Name'],
-      pcEmail: json['PC-Email'],
-      status: json['Status'],
+      id: json['ID'] ?? 'no ID',
+      parishId: json['Parish'] ?? json['parishId'],
+      name: json['Parish Name'] ?? json['name'],
+      groups: (json['groups'] as List<dynamic>?)
+              ?.map((groupJson) => Group.fromJson(groupJson))
+              .toList() ??
+          [],
+      pcID: json['PC'] ?? json['pcID'],
+      pcName: json['PC-Name'] ?? json['pcName'],
+      pcEmail: json['PC-Email'] ?? json['pcEmail'],
+      status: json['Status'] ?? json['status'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'parishId': parishId,
+      'name': name,
+      'groups': groups
+          .map((group) => group.toJson())
+          .toList(), // Correctly serialize nested objects
+      'pcID': pcID,
+      'pcName': pcName,
+      'pcEmail': pcEmail,
+      'status': status,
+    };
   }
 }

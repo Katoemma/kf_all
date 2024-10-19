@@ -65,4 +65,21 @@ class Group {
     }
     return 0;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'coordinates': coordinates,
+      'potted': potted,
+      'pricked': pricked,
+      'sorted': sorted,
+      'distributed': distributed,
+      'lastVisit': lastVisit,
+      'numVisits': numVisits,
+      'farmers': farmers
+          .map((farmer) => farmer.toJson())
+          .toList(), // Correctly serialize nested objects
+    };
+  }
 }

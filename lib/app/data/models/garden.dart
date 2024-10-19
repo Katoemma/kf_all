@@ -91,4 +91,20 @@ class Garden {
     }
     return [];
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'isBoundary': isBoundary,
+      'center': center,
+      'polygon': polygon,
+      'initialPlantingDate': initialPlantingDate,
+      'received': received,
+      'lost': lost,
+      'planted': planted,
+      'surviving': surviving,
+      'replaced': replaced,
+      'species': species,
+    };
+  }
 }

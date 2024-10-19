@@ -1,4 +1,3 @@
-import 'package:easy_loading_button/easy_loading_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,210 +5,275 @@ import 'package:kijani_branch/app/modules/auth/controllers/auth_controller.dart'
 import 'package:kijani_branch/global/enums/colors.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class LoginView extends StatelessWidget {
-  final AuthController authController = Get.find<AuthController>();
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
+class LoginView extends StatefulWidget {
   LoginView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/bg.png"),
-            alignment: Alignment.bottomCenter,
-            fit: BoxFit.fitWidth,
-            opacity: 0.3,
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 50,
-              bottom: 24,
-              left: 24,
-              right: 24,
-            ),
-            child: Center(
-              child: Form(
-                //key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: 180,
-                      width: double.infinity,
-                      child: Image(
-                        image: const AssetImage("assets/kijani_logo.png"),
-                        color: kfBlue,
-                      ),
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        "Kijani Forestry",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w900,
-                            color: kfBlue,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        "We plant trees to break the cycle of climate-induced poverty in Africa",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: kfBlue,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: TextFormField(
-                        // autofocus: true,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          hintText: "Enter your email",
-                          filled: true,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: kfBlue,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: kfBlue,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                          ),
-                          border: const OutlineInputBorder(),
-                          counterText: '',
-                          hintStyle: TextStyle(
-                            color: kfBlue,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a valid email address';
-                          }
-                          return null;
-                        },
-                        controller: usernameController,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: TextFormField(
-                        // autofocus: true,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          hintText: "Enter Code",
-                          filled: true,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: kfBlue,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: kfBlue,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                          ),
-                          border: const OutlineInputBorder(),
-                          counterText: '',
-                          hintStyle: TextStyle(
-                            color: kfBlue,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Pin';
-                          }
-                          return null;
-                        },
-                        controller: passwordController,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    EasyButton(
-                      height: 65,
-                      borderRadius: 16.0,
-                      buttonColor: kfBlue,
-                      idleStateWidget: const Text(
-                        'Continue',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                      loadingStateWidget:
-                          LoadingAnimationWidget.fourRotatingDots(
-                              color: Colors.white, size: 30),
-                      onPressed: () async {
-                        String username = usernameController.text.trim();
-                        String password = passwordController.text.trim();
+  State<LoginView> createState() => _LoginViewState();
+}
 
-                        // Call the login method from AuthController
-                        await authController.login(username, password);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        "© ${DateTime.now().year} Kijani Forestry. All rights reserved.",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.lato(
-                          textStyle: const TextStyle(
-                            fontSize: 10,
-                            color: Color.fromARGB(255, 22, 78, 26),
-                            fontWeight: FontWeight.bold,
+class _LoginViewState extends State<LoginView> {
+  final AuthController authController = Get.find<AuthController>();
+
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  var isButtonLoading = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return Stack(
+        children: [
+          Scaffold(
+            body: Container(
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/bg.png"),
+                  alignment: Alignment.bottomCenter,
+                  fit: BoxFit.fitWidth,
+                  opacity: 0.3,
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 50,
+                    bottom: 24,
+                    left: 24,
+                    right: 24,
+                  ),
+                  child: Center(
+                    child: Form(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            height: 180,
+                            width: double.infinity,
+                            child: Image(
+                              image: const AssetImage("assets/kijani_logo.png"),
+                              color: kfBlue,
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              "Kijani Forestry",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w900,
+                                  color: kfBlue,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              "We plant trees to break the cycle of climate-induced poverty in Africa",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: kfBlue,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextFormField(
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                hintText: "Enter your email",
+                                filled: true,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kfBlue,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(15)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kfBlue,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(15)),
+                                ),
+                                border: const OutlineInputBorder(),
+                                counterText: '',
+                                hintStyle: TextStyle(
+                                  color: kfBlue,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter a valid email address';
+                                }
+                                return null;
+                              },
+                              controller: usernameController,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextFormField(
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                hintText: "Enter Code",
+                                filled: true,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kfBlue,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(15)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kfBlue,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(15)),
+                                ),
+                                border: const OutlineInputBorder(),
+                                counterText: '',
+                                hintStyle: TextStyle(
+                                  color: kfBlue,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter Pin';
+                                }
+                                return null;
+                              },
+                              controller: passwordController,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          Obx(() {
+                            return TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: kfBlue,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              onPressed: isButtonLoading.value
+                                  ? null // Disable button if loading
+                                  : () async {
+                                      isButtonLoading.value =
+                                          true; // Show loading
+                                      await authController.login(
+                                          usernameController.text,
+                                          passwordController.text);
+                                      isButtonLoading.value =
+                                          false; // Hide loading
+                                    },
+                              child: Text(
+                                isButtonLoading.value
+                                    ? 'Checking user...'
+                                    : 'Login',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          }),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              "© ${DateTime.now().year} Kijani Forestry. All rights reserved.",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.lato(
+                                textStyle: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color.fromARGB(255, 22, 78, 26),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Full-screen loading overlay
+          if (authController.isLoading.value)
+            Container(
+              color: kfBlue,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Logged in as ${authController.userRole.value.toUpperCase()}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        decoration: TextDecoration.none, // Ensure no underline
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const SizedBox(
+                      height: 180,
+                      width: 180,
+                      child: Image(
+                        image: AssetImage("assets/kijani_logo.png"),
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    LoadingAnimationWidget.fourRotatingDots(
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'loading your data...',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        decoration: TextDecoration.none, // Ensure no underline
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+        ],
+      );
+    });
   }
 }

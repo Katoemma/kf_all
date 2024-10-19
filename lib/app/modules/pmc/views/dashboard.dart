@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kijani_branch/app/data/providers/greetings.dart';
 import 'package:kijani_branch/app/modules/auth/controllers/auth_controller.dart';
+import 'package:kijani_branch/global/enums/colors.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class PmcDashboard extends StatelessWidget {
+  const PmcDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Access the AuthController to get user data
     final AuthController authController = Get.find<AuthController>();
 
     return Scaffold(
@@ -72,8 +72,7 @@ class Dashboard extends StatelessWidget {
                     return const Text('No user data available');
                   }
 
-                  final userData =
-                      authController.userData; // Get the user data map
+                  final userData = authController.userData;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,6 +97,35 @@ class Dashboard extends StatelessWidget {
                 }),
 
                 const SizedBox(height: 40),
+                // Show parishes data
+                Obx(() {
+                  if (authController.parishData.isEmpty) {
+                    return const Text('No parishes data available');
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: authController.parishData.length,
+                    itemBuilder: (context, index) {
+                      final parish = authController.parishData[index];
+                      return GestureDetector(
+                        onTap: () => Get.toNamed('/parish/${parish.id}'),
+                        child: Container(
+                          color: kfBlue,
+                          padding: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.all(8),
+                          child: Text(
+                            parish.name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
               ],
             ),
           ),

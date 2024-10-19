@@ -59,4 +59,16 @@ class Farmer {
     }
     return false;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'gender': gender,
+      'phone': phone,
+      'onBoarded': onBoarded,
+      'contract': contract,
+      'gardens': gardens,
+    };
+  }
 }

@@ -1,4 +1,6 @@
 //class to handle user data from airtable and store in memory
+import 'dart:convert';
+
 import 'package:airtable_crud/airtable_plugin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kijani_branch/app/data/models/farmer.dart';
@@ -6,6 +8,7 @@ import 'package:kijani_branch/app/data/models/garden.dart';
 import 'package:kijani_branch/app/data/models/group.dart';
 import 'package:kijani_branch/app/data/models/parish_model.dart';
 import 'package:kijani_branch/global/services/airtable_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserDataProvider {
   final List<Parish> parishes = [];
@@ -36,6 +39,18 @@ class UserDataProvider {
         }
       }
     }
+
+    //save the parishes data to shared preferences
+    await _saveParishesToSharedPreferences(parishes);
+  }
+
+  Future<void> _saveParishesToSharedPreferences(List<Parish> parishes) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> parishJsonList =
+        parishes.map((parish) => jsonEncode(parish.toJson())).toList();
+    print("Saving the following parishes:");
+    parishJsonList.forEach(print);
+    await prefs.setStringList('parishes', parishJsonList);
   }
 
   Future<List<Group>?> _fetchGroupsForParish(Parish parish) async {
@@ -45,7 +60,7 @@ class UserDataProvider {
     try {
       var response = await nurseryBase.fetchRecordsWithFilter(
           'Group Allocation',
-          'AND({Parish ID} = "${parish.parishId}",  {Season Status}= "Current")'); //TODO: make to fetch only active groups
+          'AND({Parish ID} = "${parish.parishId}",  {Season Status}= "Current")');
       return response.map((record) => Group.fromJson(record.fields)).toList();
     } on AirtableException catch (e) {
       if (kDebugMode) {

@@ -1,6 +1,6 @@
 class Routes {
   static const login = '/login';
-  static const bcDashboard = '/dashboard';
-  static const pmcDashboard = '/dashboard';
-  static const melDashboard = '/dashboard';
+  static const bcDashboard = '/bcdashboard';
+  static const pmcDashboard = '/pmcdashboard';
+  static const melDashboard = '/meldashboard';
 }
